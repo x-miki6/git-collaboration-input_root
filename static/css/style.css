@@ -1,0 +1,92 @@
+body {
+  font-family: "Times New Roman", "Yu Mincho", "Hiragino Mincho ProN", serif;
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+  color: #333;
+
+  /* 水色ベース + 方眼 */
+  background-color: #eaf6ff;
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  background-size: 25px 25px; /* マスの大きさ */
+}
+
+/* 見出し */
+h1 {
+  margin-top: 20px;
+  font-size: 34px;
+  color: #000000;
+}
+
+h2 {
+  margin-top: 30px;
+  color: #0f2941;
+}
+
+h3 {
+  margin-top: 30px;
+  color: #0f2941;
+}
+
+h4 {
+  margin-top: 30px;
+  color: #11380d;
+}
+
+/* キャンバス */
+canvas {
+  border: 2px solid #4a90e2;
+  border-radius: 12px;
+  background: #ffffff;
+  margin: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* ボタン */
+button {
+  padding: 10px 16px;
+  margin: 8px;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #4a90e2, #357ABD);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+button:hover {
+  background: linear-gradient(135deg, #357ABD, #2c5fa3);
+}
+
+/* 候補ボタン */
+#candidates button {
+  background: linear-gradient(135deg, #5dade2, #3498db);
+}
+
+/* 結果表示 */
+#result {
+  margin-top: 20px;
+  padding: 15px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  min-height: 40px;
+}
+
+/* 入力欄 */
+input {
+  padding: 10px;
+  width: 70%;
+  border-radius: 6px;
+  border: 1px solid #bcdffb;
+  font-size: 16px;
+  font-family: "Times New Roman", "Yu Mincho", serif;
+}
+
+input:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 6px rgba(74, 144, 226, 0.3);
+}

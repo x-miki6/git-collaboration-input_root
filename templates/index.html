@@ -1,0 +1,37 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html>
+<body>
+
+<h3>数学記号・文字の意味を調べる</h3>
+<h1>入力√（ルート）</h1>
+
+</br>
+
+<link rel="stylesheet" href="/static/css/style.css">
+
+<h2>形を書いて検索する</h2>
+<canvas id="canvas" width="200" height="200" style="border:1px solid black;"></canvas>
+<button onclick="clearCanvas()">クリア</button>
+<button onclick="showCandidates()">検索</button>
+
+<h2>テキスト入力で検索する</h2>
+<input id="searchInput" type="text" placeholder="記号や名前を入力（例：シグマ、Σ、総和）">
+<button onclick="searchSymbol()">検索</button>
+
+
+<h4>候補一覧</h4>
+<div id="candidates"></div>
+
+
+<h4>意味</h4>
+<div id="result"></div>
+
+</br>
+</br>
+
+
+<script src="/static/js/main.js"></script>
+
+</body>
+</html>
