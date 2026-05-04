@@ -1,11 +1,61 @@
 from flask import Flask, render_template, request, jsonify
 import sqlite3
+import requests
 
-app = Flask(__name__)
+app = Flask(__name__)  # 🔥 これ追加
+
 
 @app.route("/")
 def home():
     return render_template("index.html")
+
+
+@app.route("/recognize", methods=["POST"])
+def recognize():
+    print("jsが呼ばれました")
+
+    image = request.json["image"]
+    print("受け取った画像:", image[:30])
+
+    symbols = ["Σ"]
+
+    response = requests.post(
+        "https://api.mathpix.com/v3/text",
+        headers={
+            "app_id": "YOUR_ID",
+            "app_key": "YOUR_KEY",
+            "Content-type": "application/json"
+        },
+        json={
+            "src": image
+        }
+    )
+
+    data = response.json()
+
+    print("Mathpix response:", data)
+
+    latex = data.get("latex", "")
+
+    # LaTeX → 記号変換
+    latex_to_symbol = {
+        "\\Sigma": "Σ",
+        "\\sigma": "σ",
+        "\\pi": "π",
+        "\\alpha": "α",
+        "\\beta": "β"
+    }
+
+    symbols = []
+
+    for key in latex_to_symbol:
+        if key in latex:
+            symbols.append(latex_to_symbol[key])
+
+    return jsonify({
+        "symbols": symbols
+    })
+
 
 @app.route("/search")
 def search():
@@ -32,5 +82,7 @@ def search():
 
     return jsonify(results)
 
+
 if __name__ == "__main__":
     app.run(debug=True)
+

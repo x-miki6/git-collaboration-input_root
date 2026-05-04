@@ -16,8 +16,8 @@ window.onload = function () {
     drawing = false;
     ctx.beginPath();
 
-    // 描き終わったら候補表示（仮）
-    showCandidates();
+    // 🔥 ここが重要：手書き認識
+    recognizeHandwriting(canvas);
   });
 
   canvas.addEventListener("mousemove", (e) => {
@@ -41,7 +41,7 @@ window.onload = function () {
     drawing = false;
     ctx.beginPath();
 
-    showCandidates();
+    recognizeHandwriting(canvas);
   });
 
   canvas.addEventListener("touchmove", (e) => {
@@ -70,7 +70,7 @@ window.onload = function () {
   };
 
   // =========================
-  // テキスト検索（DB連携）
+  // テキスト検索
   // =========================
   const input = document.getElementById("searchInput");
 
@@ -86,7 +86,55 @@ window.onload = function () {
 
 
 // =========================
-// DB検索（Flask API）
+// 手書き → 画像
+// =========================
+function getCanvasImage(canvas) {
+  return canvas.toDataURL("image/png");
+}
+
+
+// =========================
+// 手書き認識（Flaskへ）
+// =========================
+function recognizeHandwriting(canvas) {
+  const image = getCanvasImage(canvas);
+
+  fetch("/recognize", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ image: image })
+  })
+  .then(res => res.json())
+  .then(data => {
+    showSymbols(data.symbols);
+  });
+}
+
+
+// =========================
+// 認識結果表示
+// =========================
+function showSymbols(symbols) {
+  const container = document.getElementById("candidates");
+
+  if (!symbols || symbols.length === 0) {
+    container.innerHTML = "<p>認識できませんでした</p>";
+    return;
+  }
+
+  container.innerHTML = `
+    <p>これですか？</p>
+    ${symbols.map(s =>
+      `<button onclick="searchFromCandidate('${s}')">${s}</button>`
+    ).join("")}
+  `;
+}
+
+
+// =========================
+// DB検索（テキスト）
 // =========================
 function searchSymbol() {
   const input = document.getElementById("searchInput").value;
@@ -111,32 +159,6 @@ function searchSymbol() {
 
 
 // =========================
-// 結果表示
-// =========================
-function showResult(name, meanings) {
-  document.getElementById("result").innerHTML =
-    `<h2>${name}</h2><p>${meanings}</p>`;
-}
-
-
-// =========================
-// 手書き候補（仮）
-// =========================
-function showCandidates() {
-  const container = document.getElementById("candidates");
-
-  const candidates = ["Σ", "σ", "π"];
-
-  container.innerHTML = `
-    <p>これですか？</p>
-    ${candidates.map(c =>
-      `<button onclick="searchFromCandidate('${c}')">${c}</button>`
-    ).join("")}
-  `;
-}
-
-
-// =========================
 // 候補クリック → DB検索
 // =========================
 function searchFromCandidate(symbol) {
@@ -147,4 +169,13 @@ function searchFromCandidate(symbol) {
         showResult(data[0].name, data[0].meanings);
       }
     });
+}
+
+
+// =========================
+// 結果表示
+// =========================
+function showResult(name, meanings) {
+  document.getElementById("result").innerHTML =
+    `<h2>${name}</h2><p>${meanings}</p>`;
 }
