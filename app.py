@@ -79,8 +79,16 @@ def search():
             "readings": row[2],
             "meanings": row[3]
         })
+    
+    if len(results) == 0:    # AIの代打回答ダミー
+        ai_result = {
+            "name": query,
+            "meanings": f"{query} はDBにない特殊な数学記号の可能性があります。"
+        }
+        return jsonify([ai_result])
 
     return jsonify(results)
+
 
 
 if __name__ == "__main__":
