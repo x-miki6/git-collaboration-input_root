@@ -2,7 +2,17 @@ from flask import Flask, render_template, request, jsonify
 import sqlite3
 import requests
 
-app = Flask(__name__)  # 🔥 これ追加
+from openai import OpenAI
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY")
+)
+
+app = Flask(__name__) 
 
 
 @app.route("/")
@@ -80,15 +90,35 @@ def search():
             "meanings": row[3]
         })
     
-    if len(results) == 0:    # AIの代打回答ダミー
+    if len(results) == 0:    # DBになかった場合
+
         ai_result = {
             "name": query,
-            "meanings": f"{query} はDBにない特殊な数学記号の可能性があります。"
+            "meanings": ask_ai(query)
         }
+
         return jsonify([ai_result])
+    
+    return jsonify(results)   # DBにあった場合
 
-    return jsonify(results)
+def ask_ai(symbol):    # AI代打回答関数
 
+    response = client.chat.completions.create(
+        model="gpt-4.1-mini",
+
+        messages=[
+            {
+                "role": "system",
+                "content": "あなたは数学記号を解説する先生です。"
+            },
+            {
+                "role": "user",
+                "content": f"{symbol} の数学記号または文字の読みと意味（意味が複数ある場合は場合分けして）を簡潔に説明してください。"
+            }
+        ]
+    )
+
+    return response.choices[0].message.content
 
 
 if __name__ == "__main__":

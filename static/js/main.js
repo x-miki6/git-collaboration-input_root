@@ -1,3 +1,5 @@
+console.log("JS loaded");
+
 window.onload = function () {
 
   // =========================
