@@ -10,7 +10,7 @@ def home():
     return render_template("index.html")
 
 
-@app.route("/recognize", methods=["POST"])
+@app.route("/recognize", methods=["POST"])   # 手書き入力認識（未完成）
 def recognize():
     print("jsが呼ばれました")
 
@@ -20,7 +20,7 @@ def recognize():
     symbols = ["Σ"]
 
     response = requests.post(
-        "https://api.mathpix.com/v3/text",
+        "https://api.mathpix.com/v3/text",    # mathpixの代替案を見つける
         headers={
             "app_id": "YOUR_ID",
             "app_key": "YOUR_KEY",
