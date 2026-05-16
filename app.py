@@ -89,6 +89,9 @@ def search():
             "readings": row[2],
             "meanings": row[3]
         })
+        
+        print("query:", query)
+        print("rows:", rows)
     
     if len(results) == 0:    # DBになかった場合
 
@@ -99,26 +102,33 @@ def search():
 
         return jsonify([ai_result])
     
+    
     return jsonify(results)   # DBにあった場合
 
 def ask_ai(symbol):    # AI代打回答関数
 
-    response = client.chat.completions.create(
-        model="gpt-4.1-mini",
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4.1-mini",
+    
+            messages=[
+                {
+                    "role": "system",
+                    "content": "あなたは数学記号・文字を解説する先生です。"
+                },
+                {
+                    "role": "user",
+                    "content": f"{symbol} の数学記号または文字の読みと意味（意味が複数ある場合は場合分けして）を簡潔に説明してください。数学記号・文字でないものであった場合、「数学記号または文字と判定できませんでした」と表示してください。"
+                }
+            ]
+        )
 
-        messages=[
-            {
-                "role": "system",
-                "content": "あなたは数学記号を解説する先生です。"
-            },
-            {
-                "role": "user",
-                "content": f"{symbol} の数学記号または文字の読みと意味（意味が複数ある場合は場合分けして）を簡潔に説明してください。数学記号・文字でないものであった場合、「数学記号または文字と判定できませんでした」と表示してください。"
-            }
-        ]
-    )
+        return response.choices[0].message.content
+    
+    except Exception as e:
+        print("OpenAI error:", e)
 
-    return response.choices[0].message.content
+        return "説明を取得できませんでした。"
 
 
 if __name__ == "__main__":
