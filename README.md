@@ -17,12 +17,18 @@ JSで表示
 python init_db.py
 python insert_data.py
 
+DB追加したとき以下を実行.（データ重複の原因になる）
+Ctrl + C
+rm symbols.db
+python init_db.py
+python insert_data.py
+
 今できたこと
 ・テキスト入力でDBにあるものを表示
 ・手書き入力はダミー実装
+・データの重複改善
 
 これからやること
 ・手書き入力をLaTeXに変換
 ・DBにない記号・文字をOpenAIが代わりに補足（動作確認が未実装）
 ・数学記号・文字でないものは警告
-・意味の表示で重複があるから直すこと（例：Σで「すべて足す」と「総和」が表示されている）
