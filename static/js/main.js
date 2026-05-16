@@ -152,9 +152,13 @@ function searchSymbol() {
       }
 
       container.innerHTML = data.map(item => `
-        <button onclick="showResult('${item.name}', '${item.meanings}')">
-          ${item.name}
-        </button>
+        <button onclick="showResult(
+            '${item.name}',
+            '${item.readings}',
+            '${item.meanings}'
+        )">
+            ${item.name}
+          </button>
       `).join("");
     });
 }
@@ -177,7 +181,9 @@ function searchFromCandidate(symbol) {
 // =========================
 // 結果表示
 // =========================
-function showResult(name, meanings) {
+function showResult(name, readings, meanings) {
   document.getElementById("result").innerHTML =
-    `<h2>${name}</h2><p>${meanings}</p>`;
+    `<h2>${name}</h2>
+    <p><strong>読み:</strong> ${readings}</p>
+    <p><strong>意味:</strong> ${meanings}</p>`;
 }
